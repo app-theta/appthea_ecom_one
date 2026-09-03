@@ -1,0 +1,95 @@
+// ── Bootstrap override layer ────────────────────────────────────────────────
+// Sass colour functions (tint/shade/contrast) must run at build time, so the
+// $-variables below hold the *default* theme's literal values. The live theme
+// is applied at runtime through CSS custom properties (see theme/applyTheme.js),
+// and the mapping at the bottom of this file re-points Bootstrap's own runtime
+// variables at ours — so changing defaultTheme.js is enough; never edit
+// component CSS to change a colour.
+
+$primary:   #e11d74;
+$secondary: #12203c;
+$dark:      #1b2a4a;
+$light:     #f7f8fa;
+$danger:    #ff4d1f;
+$warning:   #d9b26a;
+
+$body-color: #1b2a4a;
+$body-bg:    #ffffff;
+
+$font-family-sans-serif: "Jost", "Hind Siliguri", "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-size-base: 0.9375rem;
+$line-height-base: 1.6;
+$headings-font-weight: 500;
+
+$border-color: #e6e9ef;
+$border-radius:    6px;
+$border-radius-sm: 4px;
+$border-radius-lg: 12px;
+$border-radius-xl: 12px;
+$border-radius-pill: 999px;
+
+$grid-gutter-width: 20px;
+$container-max-widths: (sm: 540px, md: 720px, lg: 960px, xl: 1140px, xxl: 1360px);
+
+$btn-font-weight: 500;
+$btn-padding-y: .625rem;
+$btn-padding-x: 1.25rem;
+$btn-focus-box-shadow: 0 0 0 3px rgba(225, 29, 116, .18);
+$btn-border-radius: 6px;
+$input-btn-focus-box-shadow: 0 0 0 3px rgba(225, 29, 116, .14);
+$input-padding-y: .625rem;
+$input-border-color: #e6e9ef;
+$input-placeholder-color: #8b95a8;
+
+$modal-content-border-width: 0;
+$modal-content-border-radius: 12px;
+$offcanvas-horizontal-width: 400px;
+$offcanvas-border-width: 0;
+
+$enable-shadows: false;
+$enable-gradients: false;
+
+@import "bootstrap/scss/bootstrap";
+
+// Re-point Bootstrap runtime vars at the theme's custom properties.
+:root {
+  --bs-primary: var(--pink);
+  --bs-body-color: var(--ink);
+  --bs-body-bg: var(--bg);
+  --bs-body-font-family: var(--font-body);
+  --bs-border-color: var(--line);
+  --bs-border-radius: var(--radius);
+  --bs-border-radius-lg: var(--radiusLg);
+  --bs-link-color: var(--pink);
+  --bs-link-hover-color: var(--pinkDark);
+}
+
+.btn-primary {
+  --bs-btn-bg: var(--pink);
+  --bs-btn-border-color: var(--pink);
+  --bs-btn-hover-bg: var(--pinkDark);
+  --bs-btn-hover-border-color: var(--pinkDark);
+  --bs-btn-active-bg: var(--pinkDark);
+  --bs-btn-active-border-color: var(--pinkDark);
+  --bs-btn-disabled-bg: var(--inkMute);
+  --bs-btn-disabled-border-color: var(--inkMute);
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--pink);
+  --bs-btn-border-color: var(--pink);
+  --bs-btn-hover-bg: var(--pink);
+  --bs-btn-hover-border-color: var(--pink);
+  --bs-btn-active-bg: var(--pink);
+}
+
+.btn-dark {
+  --bs-btn-bg: var(--navy);
+  --bs-btn-border-color: var(--navy);
+  --bs-btn-hover-bg: var(--ink);
+  --bs-btn-hover-border-color: var(--ink);
+}
+
+.text-primary { color: var(--pink) !important; }
+.bg-primary   { background-color: var(--pink) !important; }
+.border-primary { border-color: var(--pink) !important; }
