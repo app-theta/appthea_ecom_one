@@ -143,7 +143,13 @@ export function Pager({ page, lastPage, onPage }) {
   const pages = pageWindow(page, lastPage);
   return (
     <nav className="d-flex justify-content-center gap-1 mt-5" aria-label="Pagination">
-      <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => onPage(page - 1)} disabled={page <= 1}>
+      <button
+        type="button"
+        className="btn btn-sm btn-outline-secondary"
+        onClick={() => onPage(page - 1)}
+        disabled={page <= 1}
+        aria-label="Previous page"
+      >
         <i className="bi bi-chevron-left" aria-hidden="true" />
       </button>
       {pages.map((p, i) => (p === '…' ? (
@@ -159,7 +165,13 @@ export function Pager({ page, lastPage, onPage }) {
           {p}
         </button>
       )))}
-      <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => onPage(page + 1)} disabled={page >= lastPage}>
+      <button
+        type="button"
+        className="btn btn-sm btn-outline-secondary"
+        onClick={() => onPage(page + 1)}
+        disabled={page >= lastPage}
+        aria-label="Next page"
+      >
         <i className="bi bi-chevron-right" aria-hidden="true" />
       </button>
     </nav>
