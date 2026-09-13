@@ -991,11 +991,12 @@ h1, h2, h3, h4, h5 { letter-spacing: -0.01em; }
   place-items: center;
   overflow: hidden;
 }
-.reel video, .reel img {
+.reel video, .reel img, .reel iframe {
   height: 100%;
   width: 100%;
   max-width: 520px;
   object-fit: cover;
+  border: 0;
 }
 .reel__side {
   position: absolute;

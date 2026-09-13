@@ -27,7 +27,7 @@ export default function Dashboard() {
     { k: t('account.totalSpent'), v: money(d.total_spent ?? 0) },
     { k: t('account.totalReviews'), v: d.total_reviews ?? 0 },
     features.user_wishlist && { k: t('account.totalWishlist'), v: d.total_wishlist ?? 0 },
-    features.enable_customer_point_commission && { k: t('account.points'), v: d.point_balance ?? 0 },
+    features.enable_customer_point_commission && { k: t('account.points'), v: d.customer?.point_balance ?? 0 },
   ].filter(Boolean);
 
   const rows = Array.isArray(orders.data) ? orders.data : (orders.data?.data ?? []);

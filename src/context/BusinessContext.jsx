@@ -10,7 +10,10 @@ const EMPTY_FEATURES = {
   email_verification: false,
   phone_verification: false,
   newsletter_popup: false,
+  is_subscribe_newsletter: false,
   open_cart: false,
+  product_reels: false,
+  draft_orders: false,
   show_breedcrumb: false,
   user_wishlist: false,
   facebook_status: false,
@@ -26,6 +29,7 @@ export function BusinessProvider({ children }) {
   const [brands, setBrands] = useState([]);
   const [colours, setColours] = useState([]);
   const [sliders, setSliders] = useState([]);
+  const [seoMeta, setSeoMeta] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -45,6 +49,7 @@ export function BusinessProvider({ children }) {
         setBrands(asList(bundle?.brandLists));
         setColours(asList(bundle?.colourLists));
         setSliders(asList(bundle?.sliderLists));
+        setSeoMeta(bundle?.seoMetaInfos || null);
         setError(businessInfo ? null : 'business/info unavailable');
       } catch {
         if (alive) setError('business/info unavailable');
@@ -79,10 +84,11 @@ export function BusinessProvider({ children }) {
       brands,
       colours,
       sliders,
+      seoMeta,
       loading,
       error,
     };
-  }, [info, categories, brands, colours, sliders, loading, error]);
+  }, [info, categories, brands, colours, sliders, seoMeta, loading, error]);
 
   return <BusinessContext.Provider value={value}>{children}</BusinessContext.Provider>;
 }

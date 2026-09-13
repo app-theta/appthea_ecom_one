@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { checkout as checkoutApi } from '../api/endpoints';
 import { parseApiError, isPriceMismatch, needsOtp } from '../api/errors';
@@ -11,6 +11,7 @@ import { Crumbs } from '../components/layout/Layout';
 import OtpModal from '../components/checkout/OtpModal';
 import { Img, Empty } from '../components/ui/Ui';
 import { money } from '../utils/format';
+import { useCheckoutDraftAutosave } from '../hooks/useCheckoutDraftAutosave';
 
 const BLANK = {
   full_name: '', email: '', phone: '', address: '',
@@ -67,7 +68,17 @@ export default function Checkout() {
     return Math.max(0, subtotal + shippingCharge - discount);
   }, [applied, subtotal, shippingCharge, discount]);
 
-  const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+  const getCartPayload = useCallback(() => ({ cart: apiCart(), grandTotal }), [apiCart, grandTotal]);
+  const { saveDraft } = useCheckoutDraftAutosave({ isLoggedIn: isAuthed, enabled: !!features.draft_orders, getCartPayload });
+
+  const set = (k) => (e) => {
+    const value = e.target.value;
+    setForm((f) => {
+      const next = { ...f, [k]: value };
+      if (k === 'phone') saveDraft(next);
+      return next;
+    });
+  };
 
   if (!items.length) {
     return (

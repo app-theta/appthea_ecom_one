@@ -5,7 +5,7 @@ import { useBusiness } from '../../context/BusinessContext';
 
 export default function Footer() {
   const { t } = useI18n();
-  const { info, categories } = useBusiness();
+  const { info, categories, features } = useBusiness();
   const [email, setEmail] = useState('');
   const [done, setDone] = useState(false);
 
@@ -53,29 +53,31 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div className="col-12 col-lg-4">
-            <h4>{t('home.newsletterCta')}</h4>
-            <p className="mb-3" style={{ maxWidth: '34ch' }}>{t('home.newsletterBody')}</p>
-            {done ? (
-              <p className="mb-0" style={{ color: '#fff' }}>{t('home.subscribed')}</p>
-            ) : (
-              <form
-                className="d-flex gap-2"
-                onSubmit={(e) => { e.preventDefault(); if (email.includes('@')) setDone(true); }}
-              >
-                <input
-                  type="email"
-                  className="form-control"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder={t('home.emailPlaceholder')}
-                  aria-label={t('home.emailPlaceholder')}
-                  required
-                />
-                <button type="submit" className="btn btn-primary">{t('home.newsletterCta')}</button>
-              </form>
-            )}
-          </div>
+          {features.is_subscribe_newsletter && (
+            <div className="col-12 col-lg-4">
+              <h4>{t('home.newsletterCta')}</h4>
+              <p className="mb-3" style={{ maxWidth: '34ch' }}>{t('home.newsletterBody')}</p>
+              {done ? (
+                <p className="mb-0" style={{ color: '#fff' }}>{t('home.subscribed')}</p>
+              ) : (
+                <form
+                  className="d-flex gap-2"
+                  onSubmit={(e) => { e.preventDefault(); if (email.includes('@')) setDone(true); }}
+                >
+                  <input
+                    type="email"
+                    className="form-control"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder={t('home.emailPlaceholder')}
+                    aria-label={t('home.emailPlaceholder')}
+                    required
+                  />
+                  <button type="submit" className="btn btn-primary">{t('home.newsletterCta')}</button>
+                </form>
+              )}
+            </div>
+          )}
         </div>
       </div>
 

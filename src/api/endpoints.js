@@ -72,6 +72,8 @@ export const checkout = {
   /** Raw envelope: needs `message` + `data.payment_url` together. */
   place: (payload) => postRaw(`${F}/checkout`, payload),
   trackOrder: (uniqueCode) => post(`${F}/orders/track`, { unique_code: uniqueCode }),
+  /** Guest checkout-abandonment autosave; fire-and-forget, no response data used. */
+  saveDraft: (payload) => post(`${F}/checkout/draft/create-or-update`, payload),
 };
 
 /* ── Customer area ────────────────────────────────────────────────────────── */

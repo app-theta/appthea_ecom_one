@@ -21,10 +21,12 @@ export default function MobileNav() {
         <i className="bi bi-grid" aria-hidden="true" />
         <span>{t('nav.shop')}</span>
       </NavLink>
-      <NavLink to="/reels" className={cls}>
-        <i className="bi bi-play-btn" aria-hidden="true" />
-        <span>{t('nav.reels')}</span>
-      </NavLink>
+      {features.product_reels && (
+        <NavLink to="/reels" className={cls}>
+          <i className="bi bi-play-btn" aria-hidden="true" />
+          <span>{t('nav.reels')}</span>
+        </NavLink>
+      )}
       {features.user_wishlist ? (
         <NavLink to="/account/wishlist" className={cls}>
           <i className="bi bi-heart" aria-hidden="true" />

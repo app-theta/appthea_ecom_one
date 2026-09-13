@@ -5,11 +5,13 @@ import { SectionHead, GridSkeleton, ErrorState, Img } from '../components/ui/Ui'
 import { useI18n } from '../context/I18nContext';
 import { useBusiness } from '../context/BusinessContext';
 import { useAsync } from '../hooks/useAsync';
+import { useSeoMeta } from '../hooks/useSeoMeta';
 import { home } from '../api/endpoints';
 import { paginated } from '../utils/product';
 import { imageUrl } from '../utils/format';
 
 export default function Home() {
+  useSeoMeta('home');
   const { t } = useI18n();
   const { categories } = useBusiness();
 

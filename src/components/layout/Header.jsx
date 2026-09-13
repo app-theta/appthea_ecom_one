@@ -138,7 +138,9 @@ export default function Header() {
                   <NavLink to={`/products?category_id=${c.id}`}>{c.name}</NavLink>
                 </li>
               ))}
-              <li><NavLink to="/reels" className={({ isActive }) => (isActive ? 'is-active' : '')}>{t('nav.reels')}</NavLink></li>
+              {features.product_reels && (
+                <li><NavLink to="/reels" className={({ isActive }) => (isActive ? 'is-active' : '')}>{t('nav.reels')}</NavLink></li>
+              )}
             </ul>
           </div>
         </nav>
