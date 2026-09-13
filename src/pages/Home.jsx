@@ -19,7 +19,6 @@ export default function Home() {
 
   const featuredRows = paginated(summary.data?.featured).rows;
   const latestRows = paginated(summary.data?.latest).rows;
-  const reelRows = paginated(summary.data?.reels).rows;
 
   return (
     <>
@@ -69,27 +68,6 @@ export default function Home() {
             )}
         </div>
       </section>
-
-      {reelRows.length > 0 && (
-        <section className="section">
-          <div className="shell">
-            <SectionHead
-              eyebrow={t('nav.reels')}
-              title={t('home.reels')}
-              note={t('home.reelsNote')}
-              action={<Link to="/reels" className="btn btn-outline-secondary btn-sm">{t('common.viewAll')}</Link>}
-            />
-            <div className="reel-strip">
-              {reelRows.map((r) => (
-                <Link to={`/reels/${r.slug}`} className="reel-thumb" key={r.id}>
-                  <Img src={imageUrl(r.thumbnail || r.image)} alt={r.title || ''} label="reel · 9:16" />
-                  <span className="reel-thumb__play"><i className="bi bi-play-circle" aria-hidden="true" /></span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       <section className="section section--tight">
         <div className="shell">

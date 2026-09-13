@@ -64,6 +64,17 @@ export function BusinessProvider({ children }) {
     if (info?.name) document.title = info.name;
   }, [info?.name]);
 
+  useEffect(() => {
+    if (!info?.favicon) return;
+    let link = document.querySelector('link[rel="icon"]');
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'icon';
+      document.head.appendChild(link);
+    }
+    link.href = info.favicon;
+  }, [info?.favicon]);
+
   const value = useMemo(() => {
     const features = { ...EMPTY_FEATURES, ...(info?.features || {}) };
     const shipping = info?.shipping || {};
