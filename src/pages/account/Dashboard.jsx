@@ -53,34 +53,33 @@ export default function Dashboard() {
 
         {orders.loading ? <Sk h={160} />
           : rows.length === 0 ? <Empty icon="bi-box-seam" title={t('account.noOrders')} action={<Link to="/products" className="btn btn-primary btn-sm mt-2">{t('cart.keepShopping')}</Link>} />
-          : (
-            <div className="table-responsive">
-              <table className="otable">
-                <thead>
-                  <tr>
-                    <th>{t('account.orderId')}</th>
-                    <th>{t('account.date')}</th>
-                    <th>{t('account.status')}</th>
-                    <th className="text-end">{t('account.amount')}</th>
-                    <th />
-                  </tr>
-                </thead>
-                <tbody>
-                  {rows.map((o) => (
-                    <tr key={o.id}>
-                      <td className="mono">{o.unique_code || o.order_code || `#${o.id}`}</td>
-                      <td>{dateShort(o.created_at, lang)}</td>
-                      <td><span className={`pill ${statusPill(o.status || o.order_status)}`}>{o.status || o.order_status || '—'}</span></td>
-                      <td className="text-end mono">{money(o.grand_total ?? o.total)}</td>
-                      <td className="text-end">
-                        <Link to={`/account/orders/${o.id}`} style={{ fontSize: 'var(--fs-13)' }}>{t('common.details')}</Link>
-                      </td>
+            : (
+              <div className="table-responsive">
+                <table className="otable">
+                  <thead>
+                    <tr>
+                      <th>{t('account.orderId')}</th>
+                      <th>{t('account.date')}</th>
+                      <th>{t('account.status')}</th>
+                      <th className="text-end">{t('account.amount')}</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                  </thead>
+                  <tbody>
+                    {rows.map((o) => (
+                      <tr key={o.id}>
+                        <td className="mono">{o.unique_code || o.order_code || `#${o.id}`}</td>
+                        <td>{dateShort(o.created_at, lang)}</td>
+                        <td><span className={`pill ${statusPill(o.status || o.order_status)}`}>{o.status || o.order_status || '—'}</span></td>
+                        <td className="text-end mono">{money(o.grand_total ?? o.total)}</td>
+                        <td className="text-end">
+                          <Link to={`/account/orders/${o.id}`} style={{ fontSize: 'var(--fs-13)' }}>{t('common.details')}</Link>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
       </section>
     </>
   );
