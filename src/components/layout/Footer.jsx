@@ -9,7 +9,6 @@ export default function Footer() {
   const [email, setEmail] = useState('');
   const [done, setDone] = useState(false);
 
-  const policies = Array.isArray(info?.policy_pages) ? info.policy_pages : [];
   const socials = normalizeSocials(info?.social_links || info?.socials);
 
   return (
@@ -47,9 +46,11 @@ export default function Footer() {
               <li><Link to="/account">{t('account.dashboard')}</Link></li>
               <li><Link to="/account/orders">{t('account.orders')}</Link></li>
               <li><Link to="/track">{t('nav.track')}</Link></li>
-              {policies.map((p) => (
-                <li key={p.slug || p.id}><Link to={`/page/${p.slug}`}>{p.title || p.name}</Link></li>
-              ))}
+              <li><Link to="/privacy">{t('legal.privacy')}</Link></li>
+              <li><Link to="/terms">{t('legal.terms')}</Link></li>
+              <li><Link to="/shipping-policy">{t('legal.shipping')}</Link></li>
+              <li><Link to="/refund-policy">{t('legal.refund')}</Link></li>
+              <li><Link to="/return-policy">{t('legal.return')}</Link></li>
             </ul>
           </div>
 

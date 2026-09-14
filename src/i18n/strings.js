@@ -13,6 +13,13 @@ export const strings = {
     'nav.menu': 'Menu',
     'nav.categories': 'Categories',
 
+    'legal.privacy': 'Privacy Policy',
+    'legal.terms': 'Terms and Conditions',
+    'legal.shipping': 'Shipping Policy',
+    'legal.refund': 'Refund Policy',
+    'legal.return': 'Return Policy',
+    'legal.notPublished': 'This policy has not been published yet.',
+
     'common.loading': 'Loading',
     'common.retry': 'Try again',
     'common.viewAll': 'View all',
@@ -251,6 +258,13 @@ export const strings = {
     'nav.search': 'পণ্য খুঁজুন',
     'nav.menu': 'মেনু',
     'nav.categories': 'ক্যাটাগরি',
+
+    'legal.privacy': 'গোপনীয়তা নীতি',
+    'legal.terms': 'শর্তাবলী',
+    'legal.shipping': 'শিপিং নীতি',
+    'legal.refund': 'রিফান্ড নীতি',
+    'legal.return': 'রিটার্ন নীতি',
+    'legal.notPublished': 'এই নীতি এখনো প্রকাশ করা হয়নি।',
 
     'common.loading': 'লোড হচ্ছে',
     'common.retry': 'আবার চেষ্টা করুন',

@@ -23,6 +23,7 @@ import OrderSuccess from './pages/OrderSuccess';
 import OrderCancel from './pages/OrderCancel';
 import TrackOrder from './pages/TrackOrder';
 import Reels from './pages/Reels';
+import Policy from './pages/Policy';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
@@ -64,6 +65,11 @@ export default function App() {
                       <Route path="/track" element={<TrackOrder />} />
                       <Route path="/reels" element={<Reels />} />
                       <Route path="/reels/:slug" element={<Reels />} />
+                      <Route path="/privacy" element={<Policy field="privacy_policy" titleKey="legal.privacy" />} />
+                      <Route path="/terms" element={<Policy field="terms_condition" titleKey="legal.terms" />} />
+                      <Route path="/shipping-policy" element={<Policy field="shipping_policy" titleKey="legal.shipping" />} />
+                      <Route path="/refund-policy" element={<Policy field="refund_policy" titleKey="legal.refund" />} />
+                      <Route path="/return-policy" element={<Policy field="return_policy" titleKey="legal.return" />} />
                       <Route path="/login" element={<Login />} />
                       <Route path="/register" element={<Register />} />
                       <Route path="/forgot-password" element={<ForgotPassword />} />
