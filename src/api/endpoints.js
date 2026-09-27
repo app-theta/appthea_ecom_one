@@ -7,6 +7,8 @@ const C = '/customer';
 export const auth = {
   register: (payload) => post(`${C}/register`, payload),
   login: (payload) => post(`${C}/login`, payload),
+  /** Google (ID token) / Facebook (access token) from the provider's own browser SDK. */
+  socialLogin: (provider, token) => post(`${C}/social/${provider}`, { token }),
   forgotPassword: (payload) => post(`${C}/forgot/password`, payload),
   resetPassword: (payload) => post(`${C}/reset/password`, payload),
   profile: () => get(`${C}/profile/info`),
@@ -81,12 +83,32 @@ export const account = {
   dashboard: () => get(`${F}/dashboard`),
   orders: (params) => get(`${F}/orders`, params),
   orderDetails: (id) => get(`${F}/orders/details/${id}`),
-  deleteOrder: (id) => del(`${F}/orders/delete/${id}`),
+  /** Only a pending, unpaid order not yet with a courier (the order's `can_cancel`). */
+  cancelOrder: (id) => post(`${F}/orders/cancel/${id}`),
   /** Returns { download_url } — an unauthenticated, directly linkable URL. */
   orderDownload: (id) => get(`${F}/orders/download/${id}`),
   wishlist: () => get(`${F}/wishlist`),
   addWishlist: (productId) => post(`${F}/wishlist/store`, { product_id: productId }),
   removeWishlist: (id) => del(`${F}/wishlist/delete/${id}`),
+};
+
+/* ── Returns ──────────────────────────────────────────────────────────────── */
+export const returns = {
+  reasons: () => get(`${F}/return-reasons`),
+  /** { can_return, not_returnable_reason, return_deadline, returnable_items[], returns[] } */
+  forOrder: (orderId) => get(`${F}/orders/${orderId}/returns`),
+  /** payload: { items: [{ sale_product_id, quantity }], sale_return_reason_id, note } */
+  request: (orderId, payload) => post(`${F}/orders/${orderId}/returns`, payload),
+};
+
+/* ── Shop content: blog, FAQ, contact, newsletter ─────────────────────────── */
+export const content = {
+  blogs: (params) => get(`${F}/blogs`, params),
+  blog: (slug) => get(`${F}/blogs/${slug}`),
+  faqs: () => get(`${F}/faqs`),
+  /** payload: { name, email, phone, subject, message, website (honeypot - leave empty) } */
+  contact: (payload) => post(`${F}/contact-us`, payload),
+  subscribe: (email) => post(`${F}/subscribe`, { email }),
 };
 
 export { API_BASE };

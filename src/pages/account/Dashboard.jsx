@@ -5,6 +5,7 @@ import { useI18n } from '../../context/I18nContext';
 import { useBusiness } from '../../context/BusinessContext';
 import { Sk, ErrorState, Empty } from '../../components/ui/Ui';
 import { money, dateShort, statusPill } from '../../utils/format';
+import { orderView } from '../../utils/order';
 
 export default function Dashboard() {
   const { t, lang } = useI18n();
@@ -30,7 +31,7 @@ export default function Dashboard() {
     features.enable_customer_point_commission && { k: t('account.points'), v: d.customer?.point_balance ?? 0 },
   ].filter(Boolean);
 
-  const rows = Array.isArray(orders.data) ? orders.data : (orders.data?.data ?? []);
+  const rows = (Array.isArray(orders.data) ? orders.data : (orders.data?.data ?? [])).map(orderView);
 
   return (
     <>
@@ -67,10 +68,10 @@ export default function Dashboard() {
                   <tbody>
                     {rows.map((o) => (
                       <tr key={o.id}>
-                        <td className="mono">{o.unique_code || o.order_code || `#${o.id}`}</td>
-                        <td>{dateShort(o.created_at, lang)}</td>
-                        <td><span className={`pill ${statusPill(o.status || o.order_status)}`}>{o.status || o.order_status || '—'}</span></td>
-                        <td className="text-end mono">{money(o.grand_total ?? o.total)}</td>
+                        <td className="mono">{o.number}</td>
+                        <td>{dateShort(o.date, lang)}</td>
+                        <td><span className={`pill ${statusPill(o.status)}`}>{o.status || '—'}</span></td>
+                        <td className="text-end mono">{money(o.total)}</td>
                         <td className="text-end">
                           <Link to={`/account/orders/${o.id}`} style={{ fontSize: 'var(--fs-13)' }}>{t('common.details')}</Link>
                         </td>

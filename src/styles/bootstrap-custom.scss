@@ -6,15 +6,15 @@
 // variables at ours — so changing defaultTheme.js is enough; never edit
 // component CSS to change a colour.
 
-$primary:   #e11d74;
+$primary: #e11d74;
 $secondary: #12203c;
-$dark:      #1b2a4a;
-$light:     #f7f8fa;
-$danger:    #ff4d1f;
-$warning:   #d9b26a;
+$dark: #1b2a4a;
+$light: #f7f8fa;
+$danger: #ff4d1f;
+$warning: #d9b26a;
 
 $body-color: #1b2a4a;
-$body-bg:    #ffffff;
+$body-bg: #ffffff;
 
 $font-family-sans-serif: "Jost", "Hind Siliguri", "Helvetica Neue", Helvetica, Arial, sans-serif;
 $font-size-base: 0.9375rem;
@@ -22,14 +22,20 @@ $line-height-base: 1.6;
 $headings-font-weight: 500;
 
 $border-color: #e6e9ef;
-$border-radius:    6px;
+$border-radius: 6px;
 $border-radius-sm: 4px;
 $border-radius-lg: 12px;
 $border-radius-xl: 12px;
 $border-radius-pill: 999px;
 
 $grid-gutter-width: 20px;
-$container-max-widths: (sm: 540px, md: 720px, lg: 960px, xl: 1140px, xxl: 1360px);
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+  xxl: 1360px
+);
 
 $btn-font-weight: 500;
 $btn-padding-y: .625rem;
@@ -90,6 +96,14 @@ $enable-gradients: false;
   --bs-btn-hover-border-color: var(--ink);
 }
 
-.text-primary { color: var(--pink) !important; }
-.bg-primary   { background-color: var(--pink) !important; }
-.border-primary { border-color: var(--pink) !important; }
+.text-primary {
+  color: var(--pink) !important;
+}
+
+.bg-primary {
+  background-color: var(--pink) !important;
+}
+
+.border-primary {
+  border-color: var(--pink) !important;
+}

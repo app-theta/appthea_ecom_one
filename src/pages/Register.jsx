@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useI18n } from '../context/I18nContext';
 import { useToast } from '../context/ToastContext';
 import { parseApiError } from '../api/errors';
+import SocialLogin from '../components/auth/SocialLogin';
 
 const BLANK = {
   first_name: '', last_name: '', phone: '', email: '', password: '', password_confirmation: '',
@@ -73,6 +74,8 @@ export default function Register() {
               {busy ? `${t('common.loading')}…` : t('auth.register')}
             </button>
           </form>
+
+          <SocialLogin onDone={() => navigate('/account', { replace: true })} />
 
           <p className="mute mt-5 mb-0" style={{ fontSize: 'var(--fs-14)' }}>
             {t('auth.haveAccount')} <Link to="/login">{t('auth.signIn')}</Link>

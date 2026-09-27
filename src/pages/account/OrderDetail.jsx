@@ -5,8 +5,9 @@ import { useAsync } from '../../hooks/useAsync';
 import { useI18n } from '../../context/I18nContext';
 import { useToast } from '../../context/ToastContext';
 import { Sk, ErrorState, Img } from '../../components/ui/Ui';
+import OrderReturns from '../../components/account/OrderReturns';
 import { money, dateShort, statusPill } from '../../utils/format';
-import { imageUrl } from '../../utils/format';
+import { orderView } from '../../utils/order';
 
 export default function OrderDetail() {
   const { id } = useParams();
@@ -14,11 +15,11 @@ export default function OrderDetail() {
   const toast = useToast();
   const { data, loading, error, reload } = useAsync(() => account.orderDetails(id), [id]);
 
-  if (loading) return <Sk h={340} />;
+  // reloads (after cancel / a return) keep the page on screen
+  if (loading && !data) return <Sk h={340} />;
   if (error) return <ErrorState error={error} onRetry={reload} retryLabel={t('common.retry')} />;
 
-  const o = data?.order || data || {};
-  const items = Array.isArray(o.items) ? o.items : (o.order_items ?? []);
+  const o = orderView(data);
 
   const download = async () => {
     try {
@@ -29,72 +30,108 @@ export default function OrderDetail() {
     } catch (e) { toast.error(parseApiError(e).message); }
   };
 
+  const cancel = async () => {
+    if (!window.confirm(t('account.confirmCancel'))) return;
+    try {
+      await account.cancelOrder(o.id);
+      toast.success(t('account.orderCancelled'));
+      reload();
+    } catch (e) { toast.error(parseApiError(e).message); }
+  };
+
+  const row = (label, value, cls = '') => (
+    <div className={`summary__row ${cls}`}><span>{label}</span><span className="mono">{value}</span></div>
+  );
+
   return (
     <>
       <div className="d-flex flex-wrap align-items-start justify-content-between gap-3 mb-4">
         <div>
           <Link to="/account/orders" className="link-quiet">← {t('account.orders')}</Link>
-          <h2 className="display mt-2 mb-1" style={{ fontSize: 'var(--fs-24)' }}>
-            {o.unique_code || o.order_code || `#${o.id ?? id}`}
-          </h2>
-          <p className="mute mb-0" style={{ fontSize: 'var(--fs-13)' }}>{dateShort(o.created_at, lang)}</p>
+          <h2 className="display mt-2 mb-1" style={{ fontSize: 'var(--fs-24)' }}>{o.number}</h2>
+          <p className="mute mb-0" style={{ fontSize: 'var(--fs-13)' }}>{dateShort(o.date, lang)}</p>
         </div>
-        <div className="d-flex align-items-center gap-3">
-          <span className={`pill ${statusPill(o.status || o.order_status)}`}>{o.status || o.order_status || '—'}</span>
+        <div className="d-flex flex-wrap align-items-center gap-2">
+          <span className={`pill ${statusPill(o.status)}`}>{o.status || '—'}</span>
+          {o.paidStatus && <span className={`pill ${statusPill(o.paidStatus)}`}>{o.paidStatus}</span>}
           <button type="button" className="btn btn-outline-secondary btn-sm" onClick={download}>
             <i className="bi bi-download me-2" aria-hidden="true" />{t('account.invoice')}
           </button>
+          {o.canCancel && (
+            <button type="button" className="btn btn-outline-secondary btn-sm" onClick={cancel}>
+              <i className="bi bi-x-circle me-2" aria-hidden="true" />{t('account.cancelOrder')}
+            </button>
+          )}
         </div>
       </div>
 
       <div className="row g-5">
         <div className="col-lg-7">
-          {items.map((it, i) => (
-            <div className="cart-line" key={i}>
+          {o.items.map((it) => (
+            <div className="cart-line" key={it.id}>
               <div className="cart-line__media">
-                <Img src={imageUrl(it.image || it.product?.thumbnail)} alt="" label="img" />
+                <Img src={it.image} alt="" label="img" />
               </div>
               <div>
-                <div style={{ fontSize: 'var(--fs-14)' }}>{it.product_name || it.name || it.product?.name}</div>
+                <div style={{ fontSize: 'var(--fs-14)' }}>
+                  {it.slug ? <Link to={`/product/${it.slug}`}>{it.name}</Link> : it.name}
+                </div>
                 <ul className="cart-line__sub">
                   {it.variant && <li>{it.variant}</li>}
-                  {it.type && it.type !== 'simple' && <li>{it.type === 'bundle' ? t('cart.bundle') : t('cart.combo')}</li>}
-                  <li>× {it.quantity ?? it.bundle_quantity ?? 1}</li>
+                  <li>{money(it.unitPrice)} × {it.quantity}</li>
                 </ul>
               </div>
-              <div className="mono" style={{ fontSize: 'var(--fs-14)' }}>{money(it.total_price ?? it.price)}</div>
+              <div className="mono" style={{ fontSize: 'var(--fs-14)' }}>{money(it.total)}</div>
             </div>
           ))}
+
+          {(o.canRequestReturn || o.returned > 0) && <OrderReturns orderId={o.id} onChanged={reload} />}
+
+          {o.activities.length > 0 && (
+            <section className="mt-5">
+              <h3 className="offcanvas-title mb-3">{t('account.timeline')}</h3>
+              <ul className="list-unstyled m-0">
+                {o.activities.map((a, i) => (
+                  <li key={`${a.status}-${i}`} className="d-flex gap-3 py-2" style={{ borderBottom: '1px solid var(--lineSoft)' }}>
+                    <span className={`pill ${statusPill(a.status)}`} style={{ minWidth: 92, textAlign: 'center' }}>{a.status}</span>
+                    <span className="mute" style={{ fontSize: 'var(--fs-13)' }}>
+                      {dateShort(a.date_time, lang)}{a.note && ` · ${a.note}`}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
         </div>
 
         <div className="col-lg-5">
           <div className="summary">
             <h3 className="offcanvas-title mb-4">{t('checkout.summary')}</h3>
-            <div className="summary__row"><span>{t('cart.subtotal')}</span><span className="mono">{money(o.sub_total ?? o.subtotal)}</span></div>
-            <div className="summary__row"><span>{t('cart.shipping')}</span><span className="mono">{money(o.shipping_charge)}</span></div>
-            {Number(o.discount_amount) > 0 && (
-              <div className="summary__row summary__row--save"><span>{t('cart.discount')}</span><span className="mono">− {money(o.discount_amount)}</span></div>
-            )}
-            <div className="summary__row summary__row--total"><span>{t('cart.total')}</span><span className="mono">{money(o.grand_total ?? o.total)}</span></div>
+            {row(t('cart.subtotal'), money(o.subTotal))}
+            {row(t('cart.shipping'), money(o.shipping))}
+            {o.discount > 0 && row(t('cart.discount'), `− ${money(o.discount)}`, 'summary__row--save')}
+            {o.couponDiscount > 0 && row(t('cart.coupon'), `− ${money(o.couponDiscount)}`, 'summary__row--save')}
+            {row(t('cart.total'), money(o.total), 'summary__row--total')}
+            {o.returned > 0 && row(t('account.returned'), `− ${money(o.returned)}`)}
+            {row(t('account.paid'), money(o.paid))}
+            {o.due > 0 && row(t('account.due'), money(o.due))}
 
             <hr className="rule" style={{ marginBlock: 'var(--sp-5)' }} />
 
             <div className="opt-label">{t('checkout.contact')}</div>
-            <p className="mb-1" style={{ fontSize: 'var(--fs-14)' }}>{o.full_name || o.customer_name}</p>
-            <p className="mute mb-1" style={{ fontSize: 'var(--fs-13)' }}>{o.phone}</p>
-            <p className="mute mb-3" style={{ fontSize: 'var(--fs-13)' }}>
-              {[o.address, o.city, o.zip_code, o.country].filter(Boolean).join(', ')}
-            </p>
-            {o.payment_type && (
+            <p className="mb-1" style={{ fontSize: 'var(--fs-14)' }}>{o.address.name}</p>
+            <p className="mute mb-1" style={{ fontSize: 'var(--fs-13)' }}>{o.address.phone}</p>
+            <p className="mute mb-3" style={{ fontSize: 'var(--fs-13)' }}>{o.address.line}</p>
+            {o.paymentType && (
               <>
                 <div className="opt-label">{t('checkout.payment')}</div>
-                <p className="mb-0" style={{ fontSize: 'var(--fs-14)' }}>{o.payment_type}</p>
+                <p className="mb-0" style={{ fontSize: 'var(--fs-14)' }}>{o.paymentType}</p>
               </>
             )}
-            {o.order_note && (
+            {o.note && (
               <>
                 <div className="opt-label mt-3">{t('checkout.note')}</div>
-                <p className="mute mb-0" style={{ fontSize: 'var(--fs-13)' }}>{o.order_note}</p>
+                <p className="mute mb-0" style={{ fontSize: 'var(--fs-13)' }}>{o.note}</p>
               </>
             )}
           </div>

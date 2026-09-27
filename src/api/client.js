@@ -32,6 +32,10 @@ api.interceptors.response.use(
       setToken(null);
       window.dispatchEvent(new CustomEvent('auth:expired'));
     }
+    // 423: the shop is switched off or its subscription ran out - Layout shows a notice
+    if (error?.response?.status === 423) {
+      window.dispatchEvent(new CustomEvent('store:closed', { detail: error.response.data?.message }));
+    }
     return Promise.reject(error);
   },
 );

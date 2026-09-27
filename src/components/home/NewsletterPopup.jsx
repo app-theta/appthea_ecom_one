@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useI18n } from '../../context/I18nContext';
 import { useBusiness } from '../../context/BusinessContext';
+import { useSubscribe } from '../../hooks/useSubscribe';
 
 const SEEN_KEY = 'apptheta.newsletter.seen';
 
@@ -9,7 +10,7 @@ export default function NewsletterPopup() {
   const { features, info } = useBusiness();
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState('');
-  const [done, setDone] = useState(false);
+  const newsletter = useSubscribe();
 
   useEffect(() => {
     if (!features.newsletter_popup) return;
@@ -40,14 +41,17 @@ export default function NewsletterPopup() {
     >
       <div
         style={{
-          width: 'min(760px, 100%)', display: 'grid', gridTemplateColumns: '1fr 1fr',
+          width: info?.logo ? 'min(760px, 100%)' : 'min(460px, 100%)', display: 'grid',
+          gridTemplateColumns: info?.logo ? '1fr 1fr' : '1fr',
           background: 'var(--bg)', borderRadius: 'var(--radiusLg)', overflow: 'hidden',
           boxShadow: 'var(--shadow-lg)',
         }}
       >
-        <div className="d-none d-md-block" style={{ minHeight: 340 }}>
-          <div className="ph" style={{ height: '100%' }}>newsletter image · 3:4</div>
-        </div>
+        {info?.logo && (
+          <div className="d-none d-md-grid" style={{ minHeight: 340, placeItems: 'center', background: 'var(--bgTint)', padding: 'var(--sp-8)' }}>
+            <img src={info.logo} alt={info?.name || ''} style={{ maxWidth: '80%', maxHeight: 160, objectFit: 'contain' }} />
+          </div>
+        )}
         <div style={{ padding: 'var(--sp-10)' }}>
           <button
             type="button"
@@ -58,12 +62,17 @@ export default function NewsletterPopup() {
           <p className="eyebrow">{info?.name || 'Atelier'}</p>
           <h3 className="display mb-3" style={{ fontSize: 'var(--fs-28)' }}>{t('home.newsletterTitle')}</h3>
           <p className="muted">{t('home.newsletterBody')}</p>
-          {done ? (
+          {newsletter.done ? (
             <p className="mb-0" style={{ color: 'var(--pink)' }}>{t('home.subscribed')}</p>
           ) : (
             <form
               className="d-grid gap-2 mt-4"
-              onSubmit={(e) => { e.preventDefault(); setDone(true); try { localStorage.setItem(SEEN_KEY, '1'); } catch { /* ignore */ } }}
+              onSubmit={async (e) => {
+                e.preventDefault();
+                if (await newsletter.subscribe(email)) {
+                  try { localStorage.setItem(SEEN_KEY, '1'); } catch { /* ignore */ }
+                }
+              }}
             >
               <input
                 type="email"
@@ -74,7 +83,8 @@ export default function NewsletterPopup() {
                 placeholder={t('home.emailPlaceholder')}
                 aria-label={t('home.emailPlaceholder')}
               />
-              <button type="submit" className="btn btn-primary btn-cta">{t('home.newsletterCta')}</button>
+              <button type="submit" className="btn btn-primary btn-cta" disabled={newsletter.busy}>{t('home.newsletterCta')}</button>
+              {newsletter.error && <div className="field-error">{newsletter.error}</div>}
             </form>
           )}
         </div>

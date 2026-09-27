@@ -51,6 +51,14 @@ export function AuthProvider({ children }) {
     return data;
   }, [persist]);
 
+  /** `token`: Google's ID token or Facebook's access token, checked by the backend. */
+  const socialLogin = useCallback(async (provider, token) => {
+    const data = await authApi.socialLogin(provider, token);
+    setToken(data?.token || null);
+    persist(data?.customer || null);
+    return data;
+  }, [persist]);
+
   const logout = useCallback(async () => {
     try { await authApi.logout(); } catch { /* token may already be dead */ }
     setToken(null);
@@ -69,11 +77,12 @@ export function AuthProvider({ children }) {
     booting,
     login,
     register,
+    socialLogin,
     logout,
     refresh,
     setCustomer: persist,
     parseApiError,
-  }), [customer, booting, login, register, logout, refresh, persist]);
+  }), [customer, booting, login, register, socialLogin, logout, refresh, persist]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

@@ -24,6 +24,10 @@ import OrderCancel from './pages/OrderCancel';
 import TrackOrder from './pages/TrackOrder';
 import Reels from './pages/Reels';
 import Policy from './pages/Policy';
+import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
+import Faq from './pages/Faq';
+import Contact from './pages/Contact';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
@@ -70,6 +74,10 @@ export default function App() {
                       <Route path="/shipping-policy" element={<Policy field="shipping_policy" titleKey="legal.shipping" />} />
                       <Route path="/refund-policy" element={<Policy field="refund_policy" titleKey="legal.refund" />} />
                       <Route path="/return-policy" element={<Policy field="return_policy" titleKey="legal.return" />} />
+                      <Route path="/blog" element={<Blog />} />
+                      <Route path="/blog/:slug" element={<BlogPost />} />
+                      <Route path="/faq" element={<Faq />} />
+                      <Route path="/contact" element={<Contact />} />
                       <Route path="/login" element={<Login />} />
                       <Route path="/register" element={<Register />} />
                       <Route path="/forgot-password" element={<ForgotPassword />} />

@@ -5,8 +5,25 @@ import MobileNav from './MobileNav';
 import CartDrawer from '../cart/CartDrawer';
 import NewsletterPopup from '../home/NewsletterPopup';
 import { useBusiness } from '../../context/BusinessContext';
+import { useI18n } from '../../context/I18nContext';
 
 export default function Layout({ children }) {
+  const { closed } = useBusiness();
+  const { t } = useI18n();
+
+  // the API answered 423 - the shop is switched off or its subscription ended
+  if (closed) {
+    return (
+      <main id="main" className="shell section">
+        <div className="empty">
+          <i className="bi bi-shop" style={{ fontSize: 40 }} aria-hidden="true" />
+          <h1 className="display m-0">{t('store.closedTitle')}</h1>
+          <p className="muted m-0">{t('store.closedBody')}</p>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <>
       <Header />

@@ -4,12 +4,11 @@ import { useAuth } from '../context/AuthContext';
 import { useI18n } from '../context/I18nContext';
 import { useToast } from '../context/ToastContext';
 import { parseApiError } from '../api/errors';
-import { useBusiness } from '../context/BusinessContext';
+import SocialLogin from '../components/auth/SocialLogin';
 
 export default function Login() {
   const { t } = useI18n();
   const { login } = useAuth();
-  const { features } = useBusiness();
   const toast = useToast();
   const navigate = useNavigate();
   const location = useLocation();
@@ -68,23 +67,7 @@ export default function Login() {
             </button>
           </form>
 
-          {(features.facebook_status || features.google_status) && (
-            <div className="mt-5">
-              <div className="text-center mute mb-3" style={{ fontSize: 'var(--fs-12)' }}>{t('common.or')}</div>
-              <div className="d-grid gap-2">
-                {features.google_status && (
-                  <a href="/auth/google/redirect" className="btn btn-outline-secondary">
-                    <i className="bi bi-google me-2" aria-hidden="true" />Google
-                  </a>
-                )}
-                {features.facebook_status && (
-                  <a href="/auth/facebook/redirect" className="btn btn-outline-secondary">
-                    <i className="bi bi-facebook me-2" aria-hidden="true" />Facebook
-                  </a>
-                )}
-              </div>
-            </div>
-          )}
+          <SocialLogin onDone={() => navigate(location.state?.from || '/account', { replace: true })} />
 
           <p className="mute mt-5 mb-0" style={{ fontSize: 'var(--fs-14)' }}>
             {t('auth.noAccount')} <Link to="/register">{t('auth.register')}</Link>

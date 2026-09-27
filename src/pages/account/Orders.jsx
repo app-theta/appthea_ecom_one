@@ -6,12 +6,13 @@ import { useI18n } from '../../context/I18nContext';
 import { useToast } from '../../context/ToastContext';
 import { Sk, ErrorState, Empty } from '../../components/ui/Ui';
 import { money, dateShort, statusPill } from '../../utils/format';
+import { orderView } from '../../utils/order';
 
 export default function Orders() {
   const { t, lang } = useI18n();
   const toast = useToast();
   const { data, loading, error, reload } = useAsync(() => account.orders({ per_page: 20 }), []);
-  const rows = Array.isArray(data) ? data : (data?.data ?? []);
+  const rows = (Array.isArray(data) ? data : (data?.data ?? [])).map(orderView);
 
   const download = async (id) => {
     try {
@@ -22,16 +23,16 @@ export default function Orders() {
     } catch (e) { toast.error(parseApiError(e).message); }
   };
 
-  const remove = async (id) => {
-    if (!window.confirm(t('account.confirmDelete'))) return;
+  const cancel = async (id) => {
+    if (!window.confirm(t('account.confirmCancel'))) return;
     try {
-      await account.deleteOrder(id);
-      toast.success(t('common.remove'));
+      await account.cancelOrder(id);
+      toast.success(t('account.orderCancelled'));
       reload();
     } catch (e) { toast.error(parseApiError(e).message); }
   };
 
-  if (loading) return <Sk h={280} />;
+  if (loading && !data) return <Sk h={280} />;
   if (error) return <ErrorState error={error} onRetry={reload} retryLabel={t('common.retry')} />;
   if (!rows.length) {
     return (
@@ -61,22 +62,28 @@ export default function Orders() {
             {rows.map((o) => (
               <tr key={o.id}>
                 <td className="mono">
-                  <Link to={`/account/orders/${o.id}`}>{o.unique_code || o.order_code || `#${o.id}`}</Link>
-                  {o.items_count != null && <div className="mute" style={{ fontSize: 'var(--fs-12)' }}>{o.items_count} {t('account.items')}</div>}
+                  <Link to={`/account/orders/${o.id}`}>{o.number}</Link>
                 </td>
-                <td>{dateShort(o.created_at, lang)}</td>
-                <td><span className={`pill ${statusPill(o.status || o.order_status)}`}>{o.status || o.order_status || '—'}</span></td>
-                <td className="text-end mono">{money(o.grand_total ?? o.total)}</td>
+                <td>{dateShort(o.date, lang)}</td>
+                <td><span className={`pill ${statusPill(o.status)}`}>{o.status || '—'}</span></td>
+                <td className="text-end mono">
+                  {money(o.total)}
+                  {o.due > 0 && o.due < o.total && (
+                    <div className="mute" style={{ fontSize: 'var(--fs-12)' }}>{t('account.due')} {money(o.due)}</div>
+                  )}
+                </td>
                 <td className="text-end">
                   <div className="d-inline-flex gap-2">
                     <button type="button" className="btn btn-outline-secondary btn-sm" onClick={() => download(o.id)}>
                       <i className="bi bi-download" aria-hidden="true" />
                       <span className="visually-hidden">{t('common.download')}</span>
                     </button>
-                    <button type="button" className="btn btn-outline-secondary btn-sm" onClick={() => remove(o.id)}>
-                      <i className="bi bi-trash3" aria-hidden="true" />
-                      <span className="visually-hidden">{t('account.deleteOrder')}</span>
-                    </button>
+                    {o.canCancel && (
+                      <button type="button" className="btn btn-outline-secondary btn-sm" onClick={() => cancel(o.id)}>
+                        <i className="bi bi-x-circle" aria-hidden="true" />
+                        <span className="visually-hidden">{t('account.cancelOrder')}</span>
+                      </button>
+                    )}
                   </div>
                 </td>
               </tr>

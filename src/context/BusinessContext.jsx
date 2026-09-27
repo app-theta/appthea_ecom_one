@@ -32,6 +32,14 @@ export function BusinessProvider({ children }) {
   const [seoMeta, setSeoMeta] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  // the API answered 423: the shop is closed (stopped, or its subscription ended)
+  const [closed, setClosed] = useState(null);
+
+  useEffect(() => {
+    const onClosed = (e) => setClosed(e.detail || 'closed');
+    window.addEventListener('store:closed', onClosed);
+    return () => window.removeEventListener('store:closed', onClosed);
+  }, []);
 
   useEffect(() => {
     let alive = true;
@@ -98,8 +106,9 @@ export function BusinessProvider({ children }) {
       seoMeta,
       loading,
       error,
+      closed,
     };
-  }, [info, categories, brands, colours, sliders, seoMeta, loading, error]);
+  }, [info, categories, brands, colours, sliders, seoMeta, loading, error, closed]);
 
   return <BusinessContext.Provider value={value}>{children}</BusinessContext.Provider>;
 }

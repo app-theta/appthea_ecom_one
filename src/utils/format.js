@@ -46,7 +46,7 @@ export function initials(name) {
 
 export function statusPill(status) {
   const s = String(status ?? '').toLowerCase();
-  if (['delivered', 'completed', 'paid', 'success', 'approved'].some((k) => s.includes(k))) return 'pill--ok';
+  if (['delivered', 'delivery', 'completed', 'paid', 'success', 'approved'].some((k) => s.includes(k))) return 'pill--ok';
   if (['cancel', 'reject', 'fail', 'return'].some((k) => s.includes(k))) return 'pill--fail';
   return 'pill--pending';
 }

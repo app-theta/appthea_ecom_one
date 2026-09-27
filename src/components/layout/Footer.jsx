@@ -2,20 +2,21 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useI18n } from '../../context/I18nContext';
 import { useBusiness } from '../../context/BusinessContext';
+import { useSubscribe } from '../../hooks/useSubscribe';
 
 export default function Footer() {
   const { t } = useI18n();
   const { info, categories, features } = useBusiness();
   const [email, setEmail] = useState('');
-  const [done, setDone] = useState(false);
+  const newsletter = useSubscribe();
 
-  const socials = normalizeSocials(info?.social_links || info?.socials);
+  const socials = normalizeSocials(info);
 
   return (
     <footer className="footer">
       <div className="shell section">
         <div className="row g-5">
-          <div className="col-12 col-lg-4">
+          <div className="col-12 col-lg-3">
             <div className="footer__logo">{info?.name || 'Atelier'}</div>
             {info?.address && <p className="mt-3 mb-2" style={{ maxWidth: '32ch' }}>{info.address}</p>}
             {info?.phone && <p className="mb-1"><a href={`tel:${info.phone}`}>{info.phone}</a></p>}
@@ -54,16 +55,25 @@ export default function Footer() {
             </ul>
           </div>
 
+          <div className="col-6 col-lg-2">
+            <h4>{t('nav.help')}</h4>
+            <ul>
+              <li><Link to="/blog">{t('blog.title')}</Link></li>
+              <li><Link to="/faq">{t('faq.title')}</Link></li>
+              <li><Link to="/contact">{t('contact.title')}</Link></li>
+            </ul>
+          </div>
+
           {features.is_subscribe_newsletter && (
-            <div className="col-12 col-lg-4">
+            <div className="col-12 col-lg-3">
               <h4>{t('home.newsletterCta')}</h4>
               <p className="mb-3" style={{ maxWidth: '34ch' }}>{t('home.newsletterBody')}</p>
-              {done ? (
+              {newsletter.done ? (
                 <p className="mb-0" style={{ color: '#fff' }}>{t('home.subscribed')}</p>
               ) : (
                 <form
                   className="d-flex gap-2"
-                  onSubmit={(e) => { e.preventDefault(); if (email.includes('@')) setDone(true); }}
+                  onSubmit={(e) => { e.preventDefault(); newsletter.subscribe(email); }}
                 >
                   <input
                     type="email"
@@ -74,9 +84,10 @@ export default function Footer() {
                     aria-label={t('home.emailPlaceholder')}
                     required
                   />
-                  <button type="submit" className="btn btn-primary">{t('home.newsletterCta')}</button>
+                  <button type="submit" className="btn btn-primary" disabled={newsletter.busy}>{t('home.newsletterCta')}</button>
                 </form>
               )}
+              {newsletter.error && <div className="field-error mt-2">{newsletter.error}</div>}
             </div>
           )}
         </div>
@@ -92,22 +103,17 @@ export default function Footer() {
   );
 }
 
-const ICONS = {
-  facebook: 'bi-facebook', instagram: 'bi-instagram', youtube: 'bi-youtube',
-  twitter: 'bi-twitter-x', x: 'bi-twitter-x', tiktok: 'bi-tiktok',
-  linkedin: 'bi-linkedin', whatsapp: 'bi-whatsapp', pinterest: 'bi-pinterest',
-};
+// business/info has one field per network (facebook_link, x_link, ...)
+const NETWORKS = [
+  ['facebook_link', 'Facebook', 'bi-facebook'],
+  ['instagram_link', 'Instagram', 'bi-instagram'],
+  ['youtube_link', 'YouTube', 'bi-youtube'],
+  ['x_link', 'X', 'bi-twitter-x'],
+  ['linkedin_link', 'LinkedIn', 'bi-linkedin'],
+];
 
-function normalizeSocials(source) {
-  if (!source) return [];
-  const entries = Array.isArray(source)
-    ? source.map((s) => [s.name || s.type || s.platform, s.url || s.link])
-    : Object.entries(source);
-  return entries
-    .filter(([, url]) => typeof url === 'string' && url.startsWith('http'))
-    .map(([name, url]) => ({
-      name: String(name),
-      url,
-      icon: ICONS[String(name).toLowerCase().replace(/_link|_url/g, '')] || 'bi-link-45deg',
-    }));
+function normalizeSocials(info) {
+  return NETWORKS
+    .filter(([field]) => typeof info?.[field] === 'string' && info[field].startsWith('http'))
+    .map(([field, name, icon]) => ({ name, url: info[field], icon }));
 }
