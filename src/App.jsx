@@ -10,6 +10,7 @@ import { BusinessProvider } from './context/BusinessContext';
 import { AuthProvider } from './context/AuthContext';
 import { WishlistProvider } from './context/WishlistContext';
 import { CartProvider } from './context/CartContext';
+import { ChatProvider } from './context/ChatContext';
 
 import Layout from './components/layout/Layout';
 import ProtectedRoute from './routes/ProtectedRoute';
@@ -40,6 +41,8 @@ import OrderDetail from './pages/account/OrderDetail';
 import Wishlist from './pages/account/Wishlist';
 import MyReviews from './pages/account/MyReviews';
 import Profile from './pages/account/Profile';
+import AccountChat from './pages/account/Chat';
+import DeleteAccount from './pages/account/DeleteAccount';
 
 export default function App() {
   useEffect(() => {
@@ -56,6 +59,7 @@ export default function App() {
             <AuthProvider>
               <WishlistProvider>
                 <CartProvider>
+                  <ChatProvider>
                   <ScrollToTop />
                   <Layout>
                     <Routes>
@@ -93,11 +97,14 @@ export default function App() {
                         <Route path="wishlist" element={<Wishlist />} />
                         <Route path="reviews" element={<MyReviews />} />
                         <Route path="profile" element={<Profile />} />
+                        <Route path="chat" element={<AccountChat />} />
+                        <Route path="delete" element={<DeleteAccount />} />
                       </Route>
 
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </Layout>
+                  </ChatProvider>
                 </CartProvider>
               </WishlistProvider>
             </AuthProvider>

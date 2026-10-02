@@ -4,6 +4,7 @@ import { parseApiError } from '../../api/errors';
 import { useAsync } from '../../hooks/useAsync';
 import { useI18n } from '../../context/I18nContext';
 import { useToast } from '../../context/ToastContext';
+import { useChat } from '../../context/ChatContext';
 import { Sk, ErrorState, Img } from '../../components/ui/Ui';
 import OrderReturns from '../../components/account/OrderReturns';
 import { money, dateShort, statusPill } from '../../utils/format';
@@ -13,6 +14,7 @@ export default function OrderDetail() {
   const { id } = useParams();
   const { t, lang } = useI18n();
   const toast = useToast();
+  const { enabled: chatEnabled, openChat } = useChat();
   const { data, loading, error, reload } = useAsync(() => account.orderDetails(id), [id]);
 
   // reloads (after cancel / a return) keep the page on screen
@@ -60,6 +62,11 @@ export default function OrderDetail() {
           {o.canCancel && (
             <button type="button" className="btn btn-outline-secondary btn-sm" onClick={cancel}>
               <i className="bi bi-x-circle me-2" aria-hidden="true" />{t('account.cancelOrder')}
+            </button>
+          )}
+          {chatEnabled && (
+            <button type="button" className="btn btn-outline-secondary btn-sm" onClick={() => openChat({ order: { id: o.id, invoice_no: o.number } })}>
+              <i className="bi bi-chat-dots me-2" aria-hidden="true" />{t('chat.helpOrder')}
             </button>
           )}
         </div>

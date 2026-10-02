@@ -21,6 +21,7 @@ const EMPTY_FEATURES = {
   live_notification: false,
   enable_meta_seo: false,
   facebook_pixel_status: false,
+  customer_live_chat: false,
 };
 
 export function BusinessProvider({ children }) {

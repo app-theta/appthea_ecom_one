@@ -3,12 +3,14 @@ import { useAuth } from '../../context/AuthContext';
 import { useI18n } from '../../context/I18nContext';
 import { useBusiness } from '../../context/BusinessContext';
 import { useToast } from '../../context/ToastContext';
+import { useChat } from '../../context/ChatContext';
 import { Crumbs } from '../../components/layout/Layout';
 
 export default function AccountLayout() {
   const { t } = useI18n();
   const { customer, logout } = useAuth();
   const { features } = useBusiness();
+  const { enabled: chatEnabled, unread: chatUnread } = useChat();
   const toast = useToast();
   const navigate = useNavigate();
   const cls = ({ isActive }) => (isActive ? 'is-active' : '');
@@ -38,7 +40,14 @@ export default function AccountLayout() {
               <NavLink to="/account/wishlist" className={cls}><i className="bi bi-heart" />{t('account.wishlist')}</NavLink>
             )}
             <NavLink to="/account/reviews" className={cls}><i className="bi bi-chat-square-text" />{t('account.reviews')}</NavLink>
+            {chatEnabled && (
+              <NavLink to="/account/chat" className={cls}>
+                <i className="bi bi-chat-dots" />{t('chat.title')}
+                {chatUnread > 0 && <span className="badge rounded-pill text-bg-danger ms-auto">{chatUnread}</span>}
+              </NavLink>
+            )}
             <NavLink to="/account/profile" className={cls}><i className="bi bi-person-gear" />{t('account.profile')}</NavLink>
+            <NavLink to="/account/delete" className={({ isActive }) => (isActive ? 'is-active' : 'text-danger')}><i className="bi bi-person-x" />{t('account.deleteAccount')}</NavLink>
             <button type="button" className="account-nav-signout btn btn-link text-start p-0 mt-3" onClick={signOut}
                     style={{ color: 'var(--inkMute)', fontSize: 'var(--fs-13)', textDecoration: 'none', paddingLeft: 'var(--sp-4)' }}>
               <i className="bi bi-box-arrow-right me-2" />{t('auth.signOut')}

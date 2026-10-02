@@ -4,6 +4,7 @@ import Footer from './Footer';
 import MobileNav from './MobileNav';
 import CartDrawer from '../cart/CartDrawer';
 import NewsletterPopup from '../home/NewsletterPopup';
+import ChatWidget from '../chat/ChatWidget';
 import { useBusiness } from '../../context/BusinessContext';
 import { useI18n } from '../../context/I18nContext';
 
@@ -32,6 +33,7 @@ export default function Layout({ children }) {
       <MobileNav />
       <CartDrawer />
       <NewsletterPopup />
+      <ChatWidget />
     </>
   );
 }

@@ -8,6 +8,7 @@ import { useBusiness } from '../context/BusinessContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { useChat } from '../context/ChatContext';
 import { Crumbs } from '../components/layout/Layout';
 import ImageGallery from '../components/product/ImageGallery';
 import VariantPicker from '../components/product/VariantPicker';
@@ -27,6 +28,7 @@ export default function ProductDetail() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { t } = useI18n();
+  const { enabled: chatEnabled, openChat } = useChat();
   const { add } = useCart();
   const { features } = useBusiness();
   const wishlist = useWishlist();
@@ -272,6 +274,13 @@ export default function ProductDetail() {
             >
               {t('pdp.buyNow')} · <span className="mono">{money(activeTotal)}</span>
             </button>
+
+            {chatEnabled && (
+              <button type="button" className="btn btn-link link-quiet w-100 mt-2"
+                      onClick={() => openChat({ product: { id: product.id, title: product.name, image: productImages(product)[0] || null } })}>
+                <i className="bi bi-chat-dots me-2" aria-hidden="true" />{t('chat.askProduct')}
+              </button>
+            )}
 
             {(product.description || product.short_description) && (
               <>

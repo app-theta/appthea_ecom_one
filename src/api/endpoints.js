@@ -90,6 +90,8 @@ export const account = {
   wishlist: () => get(`${F}/wishlist`),
   addWishlist: (productId) => post(`${F}/wishlist/store`, { product_id: productId }),
   removeWishlist: (id) => del(`${F}/wishlist/delete/${id}`),
+  /** payload: { password, agree: true } - a wrong password is a 422 on the password field */
+  deleteAccount: (payload) => del(`${F}/account/delete`, { data: payload }),
 };
 
 /* ── Returns ──────────────────────────────────────────────────────────────── */
@@ -99,6 +101,24 @@ export const returns = {
   forOrder: (orderId) => get(`${F}/orders/${orderId}/returns`),
   /** payload: { items: [{ sale_product_id, quantity }], sale_return_reason_id, note } */
   request: (orderId, payload) => post(`${F}/orders/${orderId}/returns`, payload),
+};
+
+/* ── Live chat with the store (logged-in customers, store has the feature) ── */
+export const chat = {
+  /** { chat: {id, status, blocked, rating, can_rate, unread, store}, messages[], realtime: {enabled, key, cluster, channel} } */
+  open: () => get(`${F}/chat`),
+  /** params: { after } for new ones, { before } for older ones, seen: 1 when the chat is on screen */
+  messages: (params) => get(`${F}/chat/messages`, params),
+  /** formData: message, file, sale_id, product_id */
+  send: (formData, socketId) => post(`${F}/chat/messages`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data', ...(socketId ? { 'X-Socket-ID': socketId } : {}) },
+  }),
+  read: () => post(`${F}/chat/read`),
+  typing: (socketId) => post(`${F}/chat/typing`, null, { headers: socketId ? { 'X-Socket-ID': socketId } : {} }),
+  unread: () => get(`${F}/chat/unread`),
+  rate: (rating, ratingNote) => post(`${F}/chat/rate`, { rating, rating_note: ratingNote }),
+  /** raw (not the {status,data} envelope): Pusher wants { auth } back */
+  broadcastAuth: (socketId, channelName) => postRaw(`${F}/chat/broadcast-auth`, { socket_id: socketId, channel_name: channelName }),
 };
 
 /* ── Shop content: blog, FAQ, contact, newsletter ─────────────────────────── */

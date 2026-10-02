@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useI18n } from '../context/I18nContext';
 import { useToast } from '../context/ToastContext';
@@ -15,6 +15,9 @@ export default function Register() {
   const { register } = useAuth();
   const toast = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
+  // back to where the visitor came from (e.g. the chat asked them to sign up)
+  const after = location.state?.from || '/account';
   const [form, setForm] = useState(BLANK);
   const [errors, setErrors] = useState({});
   const [busy, setBusy] = useState(false);
@@ -26,7 +29,7 @@ export default function Register() {
     setBusy(true); setErrors({});
     try {
       await register(form);
-      navigate('/account', { replace: true });
+      navigate(after, { replace: true });
     } catch (err) {
       const parsed = parseApiError(err);
       setErrors(parsed.fields);
@@ -75,7 +78,7 @@ export default function Register() {
             </button>
           </form>
 
-          <SocialLogin onDone={() => navigate('/account', { replace: true })} />
+          <SocialLogin onDone={() => navigate(after, { replace: true })} />
 
           <p className="mute mt-5 mb-0" style={{ fontSize: 'var(--fs-14)' }}>
             {t('auth.haveAccount')} <Link to="/login">{t('auth.signIn')}</Link>
