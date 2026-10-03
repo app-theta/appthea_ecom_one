@@ -11,7 +11,7 @@ import { Crumbs } from '../components/layout/Layout';
 import OtpModal from '../components/checkout/OtpModal';
 import { Img, Empty } from '../components/ui/Ui';
 import { money } from '../utils/format';
-import { useCheckoutDraftAutosave } from '../hooks/useCheckoutDraftAutosave';
+import { useCheckoutDraftAutosave, storedGuestId } from '../hooks/useCheckoutDraftAutosave';
 
 const BLANK = {
   full_name: '', email: '', phone: '', address: '',
@@ -69,7 +69,7 @@ export default function Checkout() {
   }, [applied, subtotal, shippingCharge, discount]);
 
   const getCartPayload = useCallback(() => ({ cart: apiCart(), grandTotal }), [apiCart, grandTotal]);
-  const { saveDraft } = useCheckoutDraftAutosave({ isLoggedIn: isAuthed, enabled: !!features.draft_orders, getCartPayload });
+  const { saveDraft, cancelPendingDraft } = useCheckoutDraftAutosave({ isLoggedIn: isAuthed, enabled: !!features.draft_orders, getCartPayload });
 
   const set = (k) => (e) => {
     const value = e.target.value;
@@ -128,8 +128,13 @@ export default function Checkout() {
         return;
       }
 
+      // placing it now: a draft save still waiting must not run after the order
+      cancelPendingDraft();
+
       const payload = {
         cart: apiCart(),
+        // lets the server drop this browser's checkout draft once the order exists
+        guest_id: storedGuestId(),
         coupon_code: applied ? coupon.trim() : '',
         coupon_discount_amount: discount,
         ...form,

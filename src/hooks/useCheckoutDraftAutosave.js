@@ -17,6 +17,11 @@ function getGuestId() {
   }
 }
 
+/** The browser's existing guest id, or null - never makes one up (sent with the order). */
+export function storedGuestId() {
+  try { return localStorage.getItem(GUEST_ID_KEY); } catch { return null; }
+}
+
 /**
  * Silently persists an in-progress guest checkout (contact info + cart
  * snapshot) so the store can follow up on abandoned orders. Skipped entirely
@@ -61,7 +66,10 @@ export function useCheckoutDraftAutosave({ isLoggedIn, enabled, getCartPayload }
     }, DEBOUNCE_MS);
   }, []);
 
-  return { saveDraft };
+  // the order is being placed: a draft save still waiting must not bring the draft back
+  const cancelPendingDraft = useCallback(() => clearTimeout(timerRef.current), []);
+
+  return { saveDraft, cancelPendingDraft };
 }
 
 export default useCheckoutDraftAutosave;
