@@ -15,6 +15,7 @@ import VariantPicker from '../components/product/VariantPicker';
 import ComboTiers from '../components/product/ComboTiers';
 import BundleSelector from '../components/product/BundleSelector';
 import ProductCard from '../components/product/ProductCard';
+import Countdown from '../components/product/Countdown';
 import ReviewSection from '../components/review/ReviewSection';
 import { Price, Stars, Stepper, Sk, ErrorState, Img } from '../components/ui/Ui';
 import { money, plain } from '../utils/format';
@@ -203,6 +204,17 @@ export default function ProductDetail() {
               </span>
               {selected?.sku && <span className="mute">{t('pdp.sku')} {selected.sku}</span>}
             </div>
+
+            {selected?.campaign && (
+              <Link to={`/campaign/${selected.campaign.slug}`} className="pdp-campaign">
+                <span className="pdp-campaign__name">
+                  <i className="bi bi-lightning-charge-fill me-1" aria-hidden="true" />{selected.campaign.title}
+                </span>
+                <span className="pdp-campaign__ends">
+                  {t('deal.endsIn')} <Countdown endsAt={selected.campaign.ends_at} variant="inline" onEnd={reload} />
+                </span>
+              </Link>
+            )}
 
             <Price now={price.now} was={price.was} size="lg" />
 

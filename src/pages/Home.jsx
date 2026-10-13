@@ -1,12 +1,14 @@
 import { Link } from 'react-router-dom';
 import HeroSlider from '../components/home/HeroSlider';
 import ProductCard from '../components/product/ProductCard';
+import CampaignHero from '../components/home/CampaignHero';
+import Countdown from '../components/product/Countdown';
 import { SectionHead, GridSkeleton, ErrorState, Img } from '../components/ui/Ui';
 import { useI18n } from '../context/I18nContext';
 import { useBusiness } from '../context/BusinessContext';
 import { useAsync } from '../hooks/useAsync';
 import { useSeoMeta } from '../hooks/useSeoMeta';
-import { home } from '../api/endpoints';
+import { home, deals } from '../api/endpoints';
 import { paginated } from '../utils/product';
 import { imageUrl } from '../utils/format';
 
@@ -16,13 +18,56 @@ export default function Home() {
   const { categories } = useBusiness();
 
   const summary = useAsync((signal) => home.summary({ per_page: 8 }, { signal }), []);
+  // both come priced at the deal / campaign price; each reloads when its countdown ends
+  const campaigns = useAsync((signal) => deals.campaigns({ products: 8 }, { signal }), []);
+  const hotDeals = useAsync((signal) => deals.hotDeals({ signal }), []);
 
   const featuredRows = paginated(summary.data?.featured).rows;
   const latestRows = paginated(summary.data?.latest).rows;
+  const campaignList = Array.isArray(campaigns.data?.campaigns) ? campaigns.data.campaigns : [];
+  const hotRows = Array.isArray(hotDeals.data?.products) ? hotDeals.data.products : [];
 
   return (
     <>
       <HeroSlider />
+
+      {campaignList.map((c) => (
+        <section className="section section--tight" key={c.id}>
+          <div className="shell">
+            <CampaignHero campaign={c} onEnd={campaigns.reload} />
+            {c.products?.length > 0 && (
+              <div className="row g-4 mt-1">
+                {c.products.map((p) => (
+                  <div className="col-6 col-md-4 col-lg-3" key={p.id}><ProductCard product={p} /></div>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      ))}
+
+      {hotRows.length > 0 && (
+        <section className="section hot-deals">
+          <div className="shell">
+            <SectionHead
+              eyebrow={<><i className="bi bi-fire me-1" aria-hidden="true" />{t('deal.limited')}</>}
+              title={t('deal.hotDeals')}
+              note={t('deal.hotDealsNote')}
+              action={hotDeals.data?.ends_at && (
+                <div className="hot-deals__timer">
+                  <span className="hot-deals__label">{t('deal.endsIn')}</span>
+                  <Countdown endsAt={hotDeals.data.ends_at} onEnd={hotDeals.reload} />
+                </div>
+              )}
+            />
+            <div className="row g-4">
+              {hotRows.map((p) => (
+                <div className="col-6 col-md-4 col-lg-3" key={p.id}><ProductCard product={p} /></div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {categories.length > 0 && (
         <section className="section">

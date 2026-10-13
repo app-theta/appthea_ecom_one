@@ -18,6 +18,7 @@ import ProtectedRoute from './routes/ProtectedRoute';
 import Home from './pages/Home';
 import Products from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
+import Campaign from './pages/Campaign';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import OrderSuccess from './pages/OrderSuccess';
@@ -66,6 +67,7 @@ export default function App() {
                       <Route path="/" element={<Home />} />
                       <Route path="/products" element={<Products />} />
                       <Route path="/product/:slug" element={<ProductDetail />} />
+                      <Route path="/campaign/:slug" element={<Campaign />} />
                       <Route path="/cart" element={<Cart />} />
                       <Route path="/checkout" element={<Checkout />} />
                       <Route path="/order/success" element={<OrderSuccess />} />

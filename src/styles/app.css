@@ -2196,3 +2196,207 @@ h5 {
   }
   .chat-widget:has(.chat-popup) .chat-fab { display: none; }
 }
+
+/* ── Hot deals & campaigns ───────────────────────────────────────────────── */
+
+.countdown {
+  display: inline-flex;
+  gap: var(--sp-2);
+}
+
+.countdown__unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 52px;
+  padding: var(--sp-2) var(--sp-1);
+  border-radius: var(--radius);
+  background: var(--navy);
+  color: #fff;
+  line-height: 1.1;
+}
+
+.countdown__value {
+  font-size: var(--fs-20);
+  font-weight: 600;
+}
+
+.countdown__label {
+  margin-top: 2px;
+  font-size: var(--fs-10);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  opacity: .75;
+}
+
+.countdown--light .countdown__unit {
+  background: rgba(255, 255, 255, .16);
+  backdrop-filter: blur(4px);
+}
+
+.countdown-inline {
+  font-weight: 600;
+}
+
+.hot-deals .eyebrow {
+  color: var(--flame);
+}
+
+.hot-deals .section-head {
+  flex-wrap: wrap;
+}
+
+.hot-deals__timer {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.hot-deals__label {
+  font-size: var(--fs-12);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--inkSoft);
+}
+
+.campaign-hero {
+  position: relative;
+  overflow: hidden;
+  min-height: 240px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: var(--radiusLg);
+  color: #fff;
+  background: linear-gradient(120deg, var(--navy), var(--wine) 60%, var(--pink));
+}
+
+.campaign-hero__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.campaign-hero.has-banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(10, 16, 32, .82), rgba(10, 16, 32, .4) 50%, rgba(10, 16, 32, .72));
+}
+
+.campaign-hero__body {
+  position: relative;
+  z-index: 1;
+  max-width: 620px;
+  padding: var(--sp-10) var(--sp-8);
+}
+
+.campaign-hero__eyebrow {
+  margin: 0 0 var(--sp-2);
+  font-size: var(--fs-11);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.campaign-hero__title {
+  margin: 0;
+  font-family: var(--font-logo);
+  font-size: clamp(1.75rem, 4vw, 2.6rem);
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.campaign-hero__about {
+  margin: var(--sp-3) 0 0;
+  color: rgba(255, 255, 255, .85);
+  text-wrap: pretty;
+}
+
+/* right side of the banner; below the text on a phone */
+.campaign-hero__ends {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--sp-2);
+  padding: var(--sp-8);
+}
+
+.campaign-hero__ends-label {
+  font-size: var(--fs-12);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .8);
+}
+
+.campaign-hero__cta {
+  margin-top: var(--sp-6);
+}
+
+.badge-flag--campaign {
+  max-width: 150px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  background: var(--flame);
+  color: #fff;
+}
+
+.badge-flag--campaign:hover {
+  color: #fff;
+  background: var(--wine);
+}
+
+.pdp-campaign {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-4);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--radius);
+  background: var(--flame);
+  color: #fff;
+  font-size: var(--fs-14);
+}
+
+.pdp-campaign:hover {
+  color: #fff;
+  background: var(--wine);
+}
+
+.pdp-campaign__name {
+  font-weight: 600;
+}
+
+@media (max-width: 767.98px) {
+  .campaign-hero__body,
+  .campaign-hero__ends {
+    width: 100%;
+  }
+  .campaign-hero__ends {
+    align-items: flex-start;
+    padding: 0 var(--sp-5) var(--sp-8);
+  }
+  .campaign-hero__body {
+    padding-bottom: var(--sp-5);
+  }
+}
+
+@media (max-width: 575.98px) {
+  .campaign-hero__body {
+    padding: var(--sp-8) var(--sp-5) var(--sp-5);
+  }
+  .countdown__unit {
+    min-width: 44px;
+  }
+  .countdown__value {
+    font-size: var(--fs-16);
+  }
+}

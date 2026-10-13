@@ -59,7 +59,12 @@ export default function ProductCard({ product, view = 'grid' }) {
       <div className="pcard__media">
         <div className="pcard__badges">
           {!available && <span className="badge-flag badge-flag--out">{t('pdp.outOfStock')}</span>}
-          {price.was > 0 && available && <span className="badge-flag badge-flag--sale">Sale</span>}
+          {product.campaign && available && (
+            <Link to={`/campaign/${product.campaign.slug}`} className="badge-flag badge-flag--campaign" title={product.campaign.title}>
+              <i className="bi bi-lightning-charge-fill" aria-hidden="true" /> {product.campaign.title}
+            </Link>
+          )}
+          {!product.campaign && price.was > 0 && available && <span className="badge-flag badge-flag--sale">Sale</span>}
           {isSameCombo(product) && <span className="badge-flag badge-flag--combo">Combo</span>}
           {isBundle(product) && <span className="badge-flag badge-flag--combo">Bundle</span>}
         </div>

@@ -47,6 +47,16 @@ export const home = {
   summary: (params, config) => get(`${F}/home/summary`, params, config),
 };
 
+/* ── Hot deals & campaigns (prices already at the deal / campaign price) ──── */
+export const deals = {
+  /** { ends_at (null = no end), products[] } - empty while the list is a draft or ended */
+  hotDeals: (config) => get(`${F}/basic/hot-deals`, undefined, config),
+  /** running campaigns, soonest-ending first: [{ id, title, slug, banner, description, starts_at, ends_at, products_count, products[] }] */
+  campaigns: (params, config) => get(`${F}/basic/campaigns`, params, config),
+  /** { campaign, products (paginated) } - 404 once it is not running */
+  campaign: (slug, params) => get(`${F}/campaigns/${slug}`, params),
+};
+
 /* ── Reviews ──────────────────────────────────────────────────────────────── */
 export const reviews = {
   list: (productId, params) => get(`${F}/product-review/list/${productId}`, params),
