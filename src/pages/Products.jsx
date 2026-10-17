@@ -13,7 +13,9 @@ const SORTS = ['latest', 'oldest', 'price_low', 'price_high', 'name_asc', 'name_
 
 export default function Products() {
   const { t } = useI18n();
-  const { categories, brands } = useBusiness();
+  const { categories, brands, features } = useBusiness();
+  // the featured filter exists only while the store has featured products switched on
+  const featuredOn = features.enable_featured_product;
   const [params, setParams] = useSearchParams();
   const [view, setView] = useState('grid');
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -24,7 +26,7 @@ export default function Products() {
       category_id: params.get('category_id') || undefined,
       sub_category_id: params.get('sub_category_id') || undefined,
       brand_id: params.get('brand_id') || undefined,
-      is_featured: params.get('is_featured') || undefined,
+      is_featured: (featuredOn && params.get('is_featured')) || undefined,
       min_price: params.get('min_price') || undefined,
       max_price: params.get('max_price') || undefined,
       sort: params.get('sort') || 'latest',
@@ -33,7 +35,7 @@ export default function Products() {
     };
     Object.keys(q).forEach((k) => q[k] === undefined && delete q[k]);
     return q;
-  }, [params]);
+  }, [params, featuredOn]);
 
   const { data, loading, error, reload } = useAsync(() => catalog.products(query), [JSON.stringify(query)]);
   const { rows, page, lastPage, total } = paginated(data);
@@ -56,7 +58,7 @@ export default function Products() {
       key: 'brand_id',
       label: brands.find((b) => String(b.id) === params.get('brand_id'))?.name || t('plp.brand'),
     },
-    params.get('is_featured') === 'Yes' && { key: 'is_featured', label: t('plp.featuredOnly') },
+    featuredOn && params.get('is_featured') === 'Yes' && { key: 'is_featured', label: t('plp.featuredOnly') },
     (params.get('min_price') || params.get('max_price')) && {
       key: 'price',
       label: `${params.get('min_price') || 0} – ${params.get('max_price') || '∞'}`,
@@ -127,6 +129,7 @@ export default function Products() {
         />
       </div>
 
+      {featuredOn && (
       <div className="filter-group">
         <label className="d-flex align-items-center gap-2" style={{ fontSize: 'var(--fs-14)' }}>
           <input
@@ -138,6 +141,7 @@ export default function Products() {
           {t('plp.featuredOnly')}
         </label>
       </div>
+      )}
     </div>
   );
 

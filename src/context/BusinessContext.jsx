@@ -6,6 +6,10 @@ const BusinessContext = createContext(null);
 /** Feature flags default to false so the UI never shows something the tenant disabled. */
 const EMPTY_FEATURES = {
   is_coupon: false,
+  // home page sections - shown only while the store has them switched on
+  enable_campaign: false,
+  enable_hotdeal_product: false,
+  enable_featured_product: false,
   enable_customer_point_commission: false,
   email_verification: false,
   phone_verification: false,

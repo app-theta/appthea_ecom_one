@@ -15,17 +15,18 @@ import { imageUrl } from '../utils/format';
 export default function Home() {
   useSeoMeta('home');
   const { t } = useI18n();
-  const { categories } = useBusiness();
+  const { categories, features } = useBusiness();
 
   const summary = useAsync((signal) => home.summary({ per_page: 8 }, { signal }), []);
-  // both come priced at the deal / campaign price; each reloads when its countdown ends
-  const campaigns = useAsync((signal) => deals.campaigns({ products: 8 }, { signal }), []);
-  const hotDeals = useAsync((signal) => deals.hotDeals({ signal }), []);
+  // both come priced at the deal / campaign price; each reloads when its countdown ends.
+  // A section the store switched off is neither fetched nor shown.
+  const campaigns = useAsync((signal) => deals.campaigns({ products: 8 }, { signal }), [], { skip: !features.enable_campaign });
+  const hotDeals = useAsync((signal) => deals.hotDeals({ signal }), [], { skip: !features.enable_hotdeal_product });
 
   const featuredRows = paginated(summary.data?.featured).rows;
   const latestRows = paginated(summary.data?.latest).rows;
-  const campaignList = Array.isArray(campaigns.data?.campaigns) ? campaigns.data.campaigns : [];
-  const hotRows = Array.isArray(hotDeals.data?.products) ? hotDeals.data.products : [];
+  const campaignList = features.enable_campaign && Array.isArray(campaigns.data?.campaigns) ? campaigns.data.campaigns : [];
+  const hotRows = features.enable_hotdeal_product && Array.isArray(hotDeals.data?.products) ? hotDeals.data.products : [];
 
   return (
     <>
@@ -94,25 +95,27 @@ export default function Home() {
         </section>
       )}
 
-      <section className="section section--alt">
-        <div className="shell">
-          <SectionHead
-            eyebrow={t('nav.shop')}
-            title={t('home.featured')}
-            note={t('home.featuredNote')}
-            action={<Link to="/products?is_featured=Yes" className="btn btn-outline-secondary btn-sm">{t('common.viewAll')}</Link>}
-          />
-          {summary.loading ? <GridSkeleton count={4} />
-            : summary.error ? <ErrorState error={summary.error} onRetry={summary.reload} retryLabel={t('common.retry')} />
-            : (
-              <div className="row g-4">
-                {featuredRows.slice(0, 8).map((p) => (
-                  <div className="col-6 col-md-4 col-lg-3" key={p.id}><ProductCard product={p} /></div>
-                ))}
-              </div>
-            )}
-        </div>
-      </section>
+      {features.enable_featured_product && (
+        <section className="section section--alt">
+          <div className="shell">
+            <SectionHead
+              eyebrow={t('nav.shop')}
+              title={t('home.featured')}
+              note={t('home.featuredNote')}
+              action={<Link to="/products?is_featured=Yes" className="btn btn-outline-secondary btn-sm">{t('common.viewAll')}</Link>}
+            />
+            {summary.loading ? <GridSkeleton count={4} />
+              : summary.error ? <ErrorState error={summary.error} onRetry={summary.reload} retryLabel={t('common.retry')} />
+              : (
+                <div className="row g-4">
+                  {featuredRows.slice(0, 8).map((p) => (
+                    <div className="col-6 col-md-4 col-lg-3" key={p.id}><ProductCard product={p} /></div>
+                  ))}
+                </div>
+              )}
+          </div>
+        </section>
+      )}
 
       <section className="section section--tight">
         <div className="shell">
