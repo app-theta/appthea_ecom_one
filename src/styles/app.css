@@ -22,7 +22,7 @@ body {
 
 ::selection {
   background: var(--pink);
-  color: #fff;
+  color: var(--pinkContrast, #fff);
 }
 
 a {
@@ -108,8 +108,8 @@ h5 {
 /* ── Header ───────────────────────────────────────────────────────────────── */
 
 .topbar {
-  background: var(--navy);
-  color: #fff;
+  background: var(--topbarBg);
+  color: var(--topbarText);
   font-size: var(--fs-12);
   letter-spacing: .04em;
 }
@@ -123,11 +123,11 @@ h5 {
 }
 
 .topbar a {
-  color: rgba(255, 255, 255, .78);
+  color: var(--topbarMuted);
 }
 
 .topbar a:hover {
-  color: #fff;
+  color: var(--topbarText);
 }
 
 .header {
@@ -248,7 +248,7 @@ h5 {
   font-size: var(--fs-10);
   font-weight: 500;
   line-height: 1;
-  color: #fff;
+  color: var(--pinkContrast, #fff);
   background: var(--pink);
   border-radius: var(--radiusPill);
 }
@@ -1520,8 +1520,8 @@ h5 {
 
 .footer {
   margin-top: var(--sp-16);
-  background: var(--navy);
-  color: rgba(255, 255, 255, .72);
+  background: var(--footerBg);
+  color: var(--footerMuted);
   font-size: var(--fs-14);
 }
 
@@ -1529,16 +1529,16 @@ h5 {
   font-size: var(--fs-11);
   letter-spacing: .16em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--footerText);
   margin: 0 0 var(--sp-4);
 }
 
 .footer a {
-  color: rgba(255, 255, 255, .72);
+  color: var(--footerMuted);
 }
 
 .footer a:hover {
-  color: #fff;
+  color: var(--footerText);
 }
 
 .footer ul {
@@ -1552,11 +1552,11 @@ h5 {
 .footer__logo {
   font-family: var(--font-logo);
   font-size: var(--fs-28);
-  color: #fff;
+  color: var(--footerText);
 }
 
 .footer__bar {
-  border-top: 1px solid rgba(255, 255, 255, .12);
+  border-top: 1px solid var(--footerLine);
   padding-block: var(--sp-5);
   font-size: var(--fs-12);
   display: flex;
@@ -1575,7 +1575,7 @@ h5 {
   height: 36px;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(255, 255, 255, .18);
+  border: 1px solid var(--footerLineStrong);
   border-radius: 50%;
   transition: background var(--t), border-color var(--t);
 }
@@ -1583,7 +1583,7 @@ h5 {
 .social a:hover {
   background: var(--pink);
   border-color: var(--pink);
-  color: #fff;
+  color: var(--pinkContrast, #fff);
 }
 
 /* ── Mobile bottom nav ────────────────────────────────────────────────────── */
@@ -1956,7 +1956,7 @@ h5 {
   border: 0;
   border-radius: 50%;
   background: var(--pink);
-  color: #fff;
+  color: var(--pinkContrast, #fff);
   font-size: 1.5rem;
   box-shadow: var(--shadow-lg);
   cursor: pointer;
@@ -2093,7 +2093,7 @@ h5 {
   box-shadow: var(--shadow-sm);
   overflow-wrap: anywhere;
 }
-.chat-msg.is-mine .chat-bubble { background: var(--pink); color: #fff; border-radius: 14px 14px 4px 14px; }
+.chat-msg.is-mine .chat-bubble { background: var(--pink); color: var(--pinkContrast, #fff); border-radius: 14px 14px 4px 14px; }
 .chat-text { margin: 0; white-space: pre-wrap; font-size: var(--fs-14); line-height: 1.45; }
 
 .chat-img { display: block; max-width: 220px; max-height: 200px; border-radius: 10px; margin-top: 6px; }
@@ -2165,7 +2165,7 @@ h5 {
   border: 0;
   border-radius: 50%;
   background: var(--pink);
-  color: #fff;
+  color: var(--pinkContrast, #fff);
   cursor: pointer;
 }
 .chat-send:disabled { opacity: .6; }

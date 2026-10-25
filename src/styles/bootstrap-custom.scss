@@ -71,6 +71,10 @@ $enable-gradients: false;
 }
 
 .btn-primary {
+  --bs-btn-color: var(--pinkContrast);
+  --bs-btn-hover-color: var(--pinkContrast);
+  --bs-btn-active-color: var(--pinkContrast);
+  --bs-btn-disabled-color: var(--pinkContrast);
   --bs-btn-bg: var(--pink);
   --bs-btn-border-color: var(--pink);
   --bs-btn-hover-bg: var(--pinkDark);
@@ -83,6 +87,8 @@ $enable-gradients: false;
 
 .btn-outline-primary {
   --bs-btn-color: var(--pink);
+  --bs-btn-hover-color: var(--pinkContrast);
+  --bs-btn-active-color: var(--pinkContrast);
   --bs-btn-border-color: var(--pink);
   --bs-btn-hover-bg: var(--pink);
   --bs-btn-hover-border-color: var(--pink);
@@ -106,4 +112,26 @@ $enable-gradients: false;
 
 .border-primary {
   border-color: var(--pink) !important;
+}
+
+// The focus rings and the ticked checkbox are built from $primary at compile time - follow the
+// runtime pink instead, so a business's own colour reaches them too (same look by default).
+.btn {
+  --bs-btn-focus-box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb), .18);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: rgba(var(--bs-primary-rgb), .5);
+  box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb), .14);
+}
+
+.form-check-input:focus {
+  border-color: rgba(var(--bs-primary-rgb), .5);
+  box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb), .14);
+}
+
+.form-check-input:checked {
+  background-color: var(--pink);
+  border-color: var(--pink);
 }

@@ -69,7 +69,7 @@ export default function Footer() {
               <h4>{t('home.newsletterCta')}</h4>
               <p className="mb-3" style={{ maxWidth: '34ch' }}>{t('home.newsletterBody')}</p>
               {newsletter.done ? (
-                <p className="mb-0" style={{ color: '#fff' }}>{t('home.subscribed')}</p>
+                <p className="mb-0" style={{ color: 'var(--footerText)' }}>{t('home.subscribed')}</p>
               ) : (
                 <form
                   className="d-flex gap-2"

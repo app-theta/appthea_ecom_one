@@ -1,9 +1,6 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 
-import { applyTheme } from './theme/applyTheme';
-import { defaultTheme } from './theme/defaultTheme';
-
 import { I18nProvider } from './context/I18nContext';
 import { ToastProvider } from './context/ToastContext';
 import { BusinessProvider } from './context/BusinessContext';
@@ -46,12 +43,8 @@ import AccountChat from './pages/account/Chat';
 import DeleteAccount from './pages/account/DeleteAccount';
 
 export default function App() {
-  useEffect(() => {
-    /* One call paints the whole design system onto :root.
-       When the backend ships business/theme, merge it and call applyTheme again. */
-    applyTheme(defaultTheme);
-  }, []);
-
+  /* The design system is painted onto :root in main.jsx before the first render,
+     and the business's own colours by BusinessContext (theme/websiteTheme.js). */
   return (
     <BrowserRouter>
       <I18nProvider>

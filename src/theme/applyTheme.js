@@ -5,8 +5,8 @@ import { defaultTheme } from './defaultTheme';
  * Every component styles itself with var(--pink), var(--sp-4) etc.,
  * so swapping the theme object re-skins the whole site with no CSS edits.
  *
- * Future: when the backend exposes GET /api/ecom-frontend/business/theme,
- * merge the response over defaultTheme and call applyTheme again.
+ * The business's own colours (business/info `theme`) come in through
+ * websiteTheme.js, which maps them onto these names and calls this again.
  */
 export function applyTheme(theme = defaultTheme) {
   const t = mergeTheme(theme);

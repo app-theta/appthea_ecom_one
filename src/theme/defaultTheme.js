@@ -5,6 +5,12 @@ export const defaultTheme = {
     bg: '#ffffff', bgAlt: '#f7f8fa', bgTint: '#eceeea',
     pink: '#e11d74', pinkDark: '#c2135f', wine: '#7d1435',
     navy: '#12203c', flame: '#ff4d1f', gold: '#d9b26a', black: '#000000',
+    // text on the pink (buttons, badges) - dark when a business picks a light pink (websiteTheme.js)
+    pinkContrast: '#ffffff',
+    // top bar and footer: navy like before, but each can take its own colour from the business
+    topbarBg: '#12203c', topbarText: '#ffffff', topbarMuted: 'rgba(255, 255, 255, .78)',
+    footerBg: '#12203c', footerText: '#ffffff', footerMuted: 'rgba(255, 255, 255, .72)',
+    footerLine: 'rgba(255, 255, 255, .12)', footerLineStrong: 'rgba(255, 255, 255, .18)',
   },
   fonts: {
     body: '"Jost","Hind Siliguri","Helvetica Neue",Helvetica,Arial,sans-serif',

@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { basic } from '../api/endpoints';
+import { applyWebsiteTheme, rememberWebsiteTheme } from '../theme/websiteTheme';
 
 const BusinessContext = createContext(null);
 
@@ -76,6 +77,13 @@ export function BusinessProvider({ children }) {
   useEffect(() => {
     if (info?.name) document.title = info.name;
   }, [info?.name]);
+
+  // the business's own colours (Website Manage > Website Theme), kept for the next visit's first paint
+  useEffect(() => {
+    if (!info) return;
+    applyWebsiteTheme(info.theme);
+    rememberWebsiteTheme(info.theme);
+  }, [info]);
 
   useEffect(() => {
     if (!info?.favicon) return;
